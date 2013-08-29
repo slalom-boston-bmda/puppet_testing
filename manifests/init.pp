@@ -71,7 +71,7 @@ class testing::check_hiera {
   $f = '/usr/local/bin/check_hiera'
 
   file { $f:
-    content => "hiera -c /opt/puppet/hiera.yaml --debug \$1 env=$env role=$role",
+    content => "hiera -c /opt/puppet/hiera.yaml --debug \$1 environment=$environment noderole=$noderole",
     owner => 0, group => 0, mode => 0755
   }
 
@@ -88,7 +88,7 @@ class testing::apply_puppet {
   # Use the custom facts to create the test command
   # http://docs.puppetlabs.com/references/stable/configuration.html
   file { $f:
-    content => "sudo sh -c 'export FACTER_env='$env'; export FACTER_role='$role'; puppet apply --debug --hiera_config /opt/puppet/hiera.yaml --modulepath /opt/puppet/modules --graph --graphdir /opt/puppet/graphs /opt/puppet/manifests/site.pp | tee /var/log/puppet/apply_puppet.log'",
+    content => "sudo sh -c 'export FACTER_environment='$environment'; export FACTER_noderole='$noderole'; puppet apply --debug --hiera_config /opt/puppet/hiera.yaml --modulepath /opt/puppet/modules --graph --graphdir /opt/puppet/graphs /opt/puppet/manifests/site.pp | tee /var/log/puppet/apply_puppet.log'",
     owner => 0, group => 0, mode => 0755
   }
 
@@ -167,8 +167,8 @@ class testing::motd {
   Virtual: $is_virtual $virtual
   Updated: $t $timezone
   java_version (as of the previous fact run): $::java_version 
-  env = $env
-  role = $role
+  environment = $environment
+  noderole = $noderole
 ",
     owner => 0, group => 0, mode => 0644,
   }
