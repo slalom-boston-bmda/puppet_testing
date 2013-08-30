@@ -88,7 +88,7 @@ class testing::apply_puppet {
   # Use the custom facts to create the test command
   # http://docs.puppetlabs.com/references/stable/configuration.html
   file { $f:
-    content => "sudo sh -c 'export FACTER_environment='$environment'; export FACTER_noderole='$noderole'; puppet apply --debug --hiera_config /opt/puppet/hiera.yaml --modulepath /opt/puppet/modules --graph --graphdir /opt/puppet/graphs /opt/puppet/manifests/site.pp | tee /var/log/puppet/apply_puppet.log'",
+    content => "sudo sh -c 'export FACTER_environment='$environment'; export FACTER_noderole='$noderole'; puppet apply --debug --hiera_config /opt/puppet/hiera.yaml --modulepath /opt/puppet/environments/$FACTER_environment/modules --graph --graphdir /opt/puppet/graphs /opt/puppet/environments/$FACTER_environment/manifests/site.pp | tee /var/log/puppet/apply_puppet.log'",
     owner => 0, group => 0, mode => 0755
   }
 
