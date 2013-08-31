@@ -1,7 +1,7 @@
 # GOAL: 
 #   Test various things in a file which will not affect the rest of the system
 
-incude stdlib
+include stdlib
 
 class testing::test_output {
 
