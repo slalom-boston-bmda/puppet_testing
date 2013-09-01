@@ -118,13 +118,13 @@ class testing::motd {
 
   file { '/etc/motd':
     content => "Welcome to a puppet-managed node 
+  Updated: $t $timezone
   OS: $operatingsystem $operatingsystemrelease $lsbdistcodename $kernelrelease 
   Memory: $memoryfree / $memorysize
   Swap: $swapfree / $swapsize
   CPU: $processorcount x $processor0
   Host: $hostname.$domain ($clientcert) 
   Virtual: $is_virtual $virtual
-  Updated: $t $timezone
   environment = $environment
   noderole = $noderole
 ",
