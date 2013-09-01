@@ -111,47 +111,6 @@ class testing::debug_puppet {
 
 }
 
-# Run "java -version" and store the result as a custom fact
-#
-# Note: this is A BAD PATTERN 
-#  - it's not portable (it's a shell command)
-#  - it's not idempotent (the fact will not be used until the next puppet run because facter has already read/set the facts)
-#  - it relies on puppetlabs/stdlib (that's not too bad)
-#
-# This could be fixed by running this before puppet, say in Vagrant's shell provisioner, or via ssh (for remote machines)
-#
-class testing::custom_fact_java_version {
-
-  notify{ "DEBUG java_version (as of the previous fact run) is $::java_version": }
-
-  # Create a fact which will be picked up in subsequent fact runs
-
-  # facter-dot-d will be standard in Facter, later
-  # https://puppetlabs.com/blog/module-of-the-week-puppetlabsstdlib-puppetlabs-standard-library-part-3/
-  #
-  #file { ["/etc/facter", "/etc/facter/facts.d"]:
-  #  ensure => "directory",
-  #  owner  => 0, 
-  #  group  => 0, 
-  #  mode   => 775,
-  #}
-  #
-  #$cmd = 'echo "java_version: `java -version 2>&1 | grep version | perl -pi -e \'s/.*"(.*)"/\$1/\' `" > /etc/facter/facts.d/java_version.yaml'
-  #exec { "update_java_version_fact":
-  #  command => $cmd,
-  #  path    => "/usr/bin/:/bin/",
-  #  require => File['/etc/facter/facts.d'],
-  #}  
-
-  # This doesn't take effect until a login (or sourcing the file)
-  $cmd = 'echo "export FACTER_java_version=`java -version 2>&1 | grep version | perl -pi -e \'s/.*"(.*)"/\$1/\' `" > /etc/profile.d/puppet_facts.sh'
-  exec { "update_java_version_fact":
-    command => $cmd,
-    path    => "/usr/bin/:/bin/",
-  }  
-
-
-}
 
 class testing::motd {
 
@@ -166,7 +125,6 @@ class testing::motd {
   Host: $hostname.$domain ($clientcert) 
   Virtual: $is_virtual $virtual
   Updated: $t $timezone
-  java_version (as of the previous fact run): $::java_version 
   environment = $environment
   noderole = $noderole
 ",
@@ -217,7 +175,6 @@ class testing(
       include testing::check_hiera
       include testing::apply_puppet
       include testing::debug_puppet
-      include testing::custom_fact_java_version
       include testing::motd 
     }
     default: { 
